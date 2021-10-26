@@ -126,7 +126,7 @@ export default function App() {
   return (
     <div className="App-header">
       <h1>Changeset Checker</h1>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} style={{ margin: "2rem" }}>
         <div>
           <textarea
             value={searchQuery}
