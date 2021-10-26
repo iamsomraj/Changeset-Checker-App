@@ -1,19 +1,24 @@
-import "./styles.css";
 import { useState } from "react";
 import xmlToJSONUtility from "xml-js";
+import "./App.css";
 
 type ItemType = {
   key: string;
   value: string[];
 };
 
-type TextType = {
+interface TextType {
   _text: string;
-};
+}
 
 type MemberType = TextType[] | TextType;
 
 type XMLType = { members: MemberType; name: TextType };
+
+const determineMemberType = (member: MemberType): member is TextType => {
+  if ((member as TextType)._text) return true;
+  return false;
+};
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,26 +33,31 @@ export default function App() {
     e.preventDefault();
 
     try {
-      if (!searchQuery || !fileContent) {
+      if (
+        !searchQuery ||
+        !fileContent ||
+        searchQuery.trim().length === 0 ||
+        fileContent.trim().length === 0
+      ) {
+        console.log("Search Query or File Content is null", {
+          searchQuery,
+          fileContent,
+        });
         alert(
           "Search Query or File Content is null : Check Console For More Info"
         );
-        console.log("Search Query or File Content is null", {
-          searchQuery,
-          fileContent
-        });
         return;
       }
       const jsonString = xmlToJSONUtility.xml2json(fileContent, {
         compact: true,
-        spaces: 4
+        spaces: 4,
       });
 
       const parsedJSON = JSON.parse(jsonString);
       console.log("Before Processing: ", { searchQuery, parsedJSON });
 
       const {
-        fullName: { _text: changeSetName }
+        fullName: { _text: changeSetName },
       } = parsedJSON.Package;
 
       const types: XMLType[] = parsedJSON.Package.types;
@@ -55,17 +65,17 @@ export default function App() {
       let items: ItemType[] = [];
 
       items = types.map((type: XMLType) => {
-        if (type.members.hasOwnProperty("_text")) {
+        if (determineMemberType(type.members)) {
           let value = [];
           value.push(type.members._text);
           return {
             key: type.name._text,
-            value
+            value,
           };
         } else {
           return {
             key: type.name._text,
-            value: type.members.map((mem: TextType) => mem._text)
+            value: type.members.map((mem: TextType) => mem._text),
           };
         }
       });
@@ -82,7 +92,7 @@ export default function App() {
         return {
           token,
           isFound: item !== undefined,
-          place: item === undefined ? "" : item.key
+          place: item === undefined ? "" : item.key,
         };
       });
 
@@ -99,7 +109,7 @@ export default function App() {
     if (!content) {
       alert("File Upload failed : Check Console For More Info");
       console.log("File Upload failed", {
-        content
+        content,
       });
       return;
     }
@@ -114,7 +124,8 @@ export default function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App-header">
+      <h1>Changeset Checker</h1>
       <form onSubmit={onSubmit}>
         <div>
           <textarea
