@@ -161,8 +161,11 @@ export default function App() {
               className="App-alert"
               key={result.token}
               style={{
-                margin: "0.25rem 0",
+                margin: "0.5rem 0",
                 color: result.isFound ? "green" : "red",
+                border: "solid 3px",
+                borderColor: result.isFound ? "green" : "red",
+                backgroundColor: result.isFound ? "lightgreen" : "pink",
               }}
             >
               {result.isFound &&
