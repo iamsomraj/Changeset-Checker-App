@@ -32,6 +32,8 @@ export default function App() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setResults([]);
+
     try {
       if (
         !searchQuery ||
@@ -41,7 +43,7 @@ export default function App() {
       ) {
         console.log("Search Query or File Content is null", {
           searchQuery,
-          fileContent
+          fileContent,
         });
         alert(
           "Search Query or File Content is null : Check Console For More Info"
@@ -50,14 +52,14 @@ export default function App() {
       }
       const jsonString = xmlToJSONUtility.xml2json(fileContent, {
         compact: true,
-        spaces: 4
+        spaces: 4,
       });
 
       const parsedJSON = JSON.parse(jsonString);
       console.log("Before Processing: ", { searchQuery, parsedJSON });
 
       const {
-        fullName: { _text: changeSetName }
+        fullName: { _text: changeSetName },
       } = parsedJSON.Package;
 
       const types: XMLType[] = parsedJSON.Package.types;
@@ -70,12 +72,12 @@ export default function App() {
           value.push(type.members._text);
           return {
             key: type.name._text,
-            value
+            value,
           };
         } else {
           return {
             key: type.name._text,
-            value: type.members.map((mem: TextType) => mem._text)
+            value: type.members.map((mem: TextType) => mem._text),
           };
         }
       });
@@ -92,11 +94,12 @@ export default function App() {
         return {
           token,
           isFound: item !== undefined,
-          place: item === undefined ? "" : item.key
+          place: item === undefined ? "" : item.key,
         };
       });
 
       setResults(results);
+      setSearchQuery("");
 
       console.log("After Processing: ", { items, changeSetName, results });
     } catch (error) {
@@ -109,7 +112,7 @@ export default function App() {
     if (!content) {
       alert("File Upload failed : Check Console For More Info");
       console.log("File Upload failed", {
-        content
+        content,
       });
       return;
     }
@@ -158,7 +161,7 @@ export default function App() {
               key={result.token}
               style={{
                 margin: "0.25rem 0",
-                color: result.isFound ? "green" : "red"
+                color: result.isFound ? "green" : "red",
               }}
             >
               {result.isFound &&
