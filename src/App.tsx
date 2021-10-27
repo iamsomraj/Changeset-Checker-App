@@ -132,7 +132,7 @@ export default function App() {
         </div>
         <div style={{ margin: "0.5rem 0" }}>
           <textarea
-            cols={45}
+            cols={35}
             rows={6}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
