@@ -158,6 +158,7 @@ export default function App() {
         results.map((result) => {
           return (
             <div
+              className="App-alert"
               key={result.token}
               style={{
                 margin: "0.25rem 0",
