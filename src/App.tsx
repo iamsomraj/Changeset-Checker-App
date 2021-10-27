@@ -41,7 +41,7 @@ export default function App() {
       ) {
         console.log("Search Query or File Content is null", {
           searchQuery,
-          fileContent,
+          fileContent
         });
         alert(
           "Search Query or File Content is null : Check Console For More Info"
@@ -50,14 +50,14 @@ export default function App() {
       }
       const jsonString = xmlToJSONUtility.xml2json(fileContent, {
         compact: true,
-        spaces: 4,
+        spaces: 4
       });
 
       const parsedJSON = JSON.parse(jsonString);
       console.log("Before Processing: ", { searchQuery, parsedJSON });
 
       const {
-        fullName: { _text: changeSetName },
+        fullName: { _text: changeSetName }
       } = parsedJSON.Package;
 
       const types: XMLType[] = parsedJSON.Package.types;
@@ -70,12 +70,12 @@ export default function App() {
           value.push(type.members._text);
           return {
             key: type.name._text,
-            value,
+            value
           };
         } else {
           return {
             key: type.name._text,
-            value: type.members.map((mem: TextType) => mem._text),
+            value: type.members.map((mem: TextType) => mem._text)
           };
         }
       });
@@ -92,7 +92,7 @@ export default function App() {
         return {
           token,
           isFound: item !== undefined,
-          place: item === undefined ? "" : item.key,
+          place: item === undefined ? "" : item.key
         };
       });
 
@@ -109,7 +109,7 @@ export default function App() {
     if (!content) {
       alert("File Upload failed : Check Console For More Info");
       console.log("File Upload failed", {
-        content,
+        content
       });
       return;
     }
@@ -125,21 +125,27 @@ export default function App() {
 
   return (
     <div className="App-header">
-      <h1>Changeset Checker</h1>
+      <h1>Salesforce Changeset Checker</h1>
       <form onSubmit={onSubmit} style={{ margin: "2rem" }}>
-        <div>
+        <div style={{ margin: "0.5rem 0" }}>
+          Enter comma-separated file names
+        </div>
+        <div style={{ margin: "0.5rem 0" }}>
           <textarea
+            cols={40}
+            rows={6}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div>
+        <div style={{ margin: "0.5rem 0" }}>Upload package.xml</div>
+        <div style={{ margin: "0.5rem 0" }}>
           <input
             type="file"
             onChange={(e) => handleFileChosen(e.target.files)}
           />
         </div>
-        <div>
+        <div style={{ margin: "0.5rem 0" }}>
           <button type="submit">Check</button>
         </div>
       </form>
@@ -150,7 +156,10 @@ export default function App() {
           return (
             <div
               key={result.token}
-              style={{ color: result.isFound ? "green" : "red" }}
+              style={{
+                margin: "0.25rem 0",
+                color: result.isFound ? "green" : "red"
+              }}
             >
               {result.isFound &&
                 `${result.token} is present in ${result.place}`}
